@@ -34,7 +34,7 @@ function ExampleRenderer({data, error, loading}) {
   return (
     <div className="ui large relaxed divided list container">
       {data.examples.map(example =>
-        <div class="item" key={example.answer}>
+        <div className="item" key={example.answer}>
           <div className="header">
             Answer:&nbsp;
             <Link to={`/example/${example.time}`}>
