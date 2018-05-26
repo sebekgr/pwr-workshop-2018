@@ -8,9 +8,19 @@ const typeDefs = gql`
     time: Int
   }
 
+  type User {
+    _id: String
+    username: String
+    avatar: String
+    birthdate: String    
+  }
+
   type Query {
     examples(input: Int!): [Example!]!
+    usersByName(name: String!): [User!]!
+    users: [User!]!
   }
+
 `;
 
 const resolvers = {
@@ -45,8 +55,35 @@ const resolvers = {
         ok: args.input > 0,
         time: args.input
       }];
+    },
+
+    async users(parent, args, context, info) {
+      let client = await MongoClient.connect('mongodb://workshop:workshop@ds227939.mlab.com:27939/workshop');
+      const result = await client
+          .db('workshop')
+          .collection('users')
+          .find({})
+          .toArray();
+      if (client) client.close();
+      return result;
+    },
+
+    async usersByName(parent, args, context, info) {
+      let client = await MongoClient.connect('mongodb://workshop:workshop@ds227939.mlab.com:27939/workshop');
+      const result = await client
+          .db('workshop')
+          .collection('users')
+          .find( { username: args.name })
+          .toArray();
+      result.push({_id: "customid",
+        username: "myUser",
+        avatar: "url",
+        birthdate: "date"});
+      if (client) client.close();
+      return result;
     }
   }
+
 };
 
 const server = new ApolloServer({resolvers, typeDefs});

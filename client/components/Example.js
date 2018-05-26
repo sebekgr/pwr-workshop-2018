@@ -33,7 +33,7 @@ function ExampleRenderer({data, error, loading}) {
 
   return (
     <div className="ui large relaxed divided list container">
-      {data.examples.map(example =>
+      { data.examples.map(example =>
         <div className="item" key={example.answer}>
           <div className="header">
             Answer:&nbsp;
